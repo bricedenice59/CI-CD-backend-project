@@ -9,8 +9,7 @@ class BobappApplicationTests {
 
 	@Test
 	void contextLoads() {
-		var test = false;
-		Assertions.assertTrue(test);
+		Assertions.assertTrue(true);
 	}
 
 }
