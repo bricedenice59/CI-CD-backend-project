@@ -1,0 +1,38 @@
+name: Build-test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    types: [opened, reopened]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ${{ github.workspace }}/back
+
+    strategy:
+      matrix:
+        java: ['11']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK with version ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+          cache: 'maven'
+          cache-dependency-path: '${{ github.workspace }}/back/pom.xml'
+
+      - name: Install dependencies
+        run: mvn clean install
+
+      - name: Perform tests
+        run: mvn clean test
