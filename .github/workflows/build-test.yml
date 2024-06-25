@@ -9,7 +9,8 @@ on:
     types: [opened, reopened]
 
 jobs:
-  backend:
+  build:
+    name: build and perform test job
     runs-on: ubuntu-latest
 
     defaults:
@@ -32,8 +33,8 @@ jobs:
           cache: 'maven'
           cache-dependency-path: '${{ github.workspace }}/pom.xml'
 
-      - name: Install dependencies
-        run: mvn clean install
+      - name: Install dependencies without performing any test check
+        run: mvn clean install -DskipTests
 
       - name: Perform tests
         run: mvn clean test
