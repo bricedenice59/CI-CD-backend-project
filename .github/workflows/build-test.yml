@@ -29,7 +29,7 @@ jobs:
           distribution: 'temurin'
           java-version: ${{ matrix.java }}
           cache: 'maven'
-          cache-dependency-path: '${{ github.workspace }}/back/pom.xml'
+          cache-dependency-path: '${{ github.workspace }}/pom.xml'
 
       - name: Install dependencies
         run: mvn clean install
