@@ -38,3 +38,12 @@ jobs:
 
       - name: Perform tests
         run: mvn clean test
+
+      - name: Code coverage report
+        run: mvn jacoco:report
+
+      - name: Create artifact for code coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code coverage report
+          path: ./target/site/jacoco/
