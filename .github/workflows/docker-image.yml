@@ -34,11 +34,8 @@ jobs:
     needs: [build, login]
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: ${{ github.workspace }}
-
     steps:
       - name: Upload image
         run: |
+          docker images
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/$APP_NAME
