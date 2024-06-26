@@ -9,18 +9,7 @@ on:
     types: [opened, reopened]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-      - name: Build and tag image
-        run: |
-          docker build -t $APP_NAME .
-          docker tag $APP_NAME ${{ secrets.DOCKER_HUB_USERNAME }}/$APP_NAME:latest
-
   login:
-    needs: build
     runs-on: ubuntu-latest
 
     steps:
@@ -29,13 +18,16 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
-
-  upload:
-    needs: [build, login]
+          
+  build:
+    needs: login
     runs-on: ubuntu-latest
 
     steps:
-      - name: Upload image
+      - uses: actions/checkout@v4
+      - name: Build, Tag and upload image
         run: |
+          docker build -t $APP_NAME .
+          docker tag $APP_NAME ${{ secrets.DOCKER_HUB_USERNAME }}/$APP_NAME:latest
           docker images
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/$APP_NAME
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/$APP_NAME:latest
