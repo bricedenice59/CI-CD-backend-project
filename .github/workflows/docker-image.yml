@@ -33,7 +33,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
   upload:
-    needs: login
+    needs: [build, login]
     runs-on: ubuntu-latest
 
     steps:
