@@ -13,21 +13,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: 17
-
-      - name: Cache Maven packages
-        uses: actions/cache@v3
-        with:
-            path: ~/.m2
-            key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-            restore-keys: ${{ runner.os }}-m2
-
-      - name: Install dependencies without performing any test check
-        run: mvn clean install -DskipTests
 
       - name: Cache SonarQube packages
         uses: actions/cache@v3
@@ -36,14 +29,15 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@v2.2.0
+      - name: Cache Maven packages
+        uses: actions/cache@v3
         with:
-          projectBaseDir: .
-          args: >
-            -Dsonar.projectKey=P10_backend
-            -Dsonar.tests=src/test/java/com/openclassrooms/bobapp
-            -Dsonar.verbose=true
+            path: ~/.m2
+            key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+            restore-keys: ${{ runner.os }}-m2
+
+      - name: Build and analyze
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+            SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=P10_backend
