@@ -45,6 +45,12 @@ jobs:
             SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=P10_backend
 
+      - name: Create artifact for SonarQube Report
+        uses: actions/upload-artifact@v4
+        with:
+            name: SonarQube Report
+            path: .scannerwork/report-task.txt
+
       # If you wish to fail your job when the Quality Gate is red, uncomment the
       # following lines. This would typically be used to fail a deployment.
       - name: Sonarqube Quality gate check
