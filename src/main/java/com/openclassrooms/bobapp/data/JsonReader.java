@@ -29,10 +29,6 @@ public class JsonReader {
         private final static JsonReader instance = new JsonReader();
     }
 
-    public static JsonReader getInstance() {
-        return SingletonHolder.instance;
-    }
-
     public List<Joke> getJokes() {
         JsonNode jokeNode = this.jsonFile.get("jokes");
         Joke[] persons = mapper.convertValue(jokeNode, Joke[].class);
