@@ -40,10 +40,14 @@ jobs:
             restore-keys: ${{ runner.os }}-m2
 
       - name: Build and analyze
+        uses: sonarsource/sonarqube-scan-action@master
+        with:
+            projectBaseDir: .
+            args: >
+              -Dsonar.projectKey=P10_backend
         env:
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
             SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=P10_backend
 
       - name: Create artifact for SonarQube Report
         uses: actions/upload-artifact@v4
